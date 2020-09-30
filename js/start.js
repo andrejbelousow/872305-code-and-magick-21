@@ -14,7 +14,7 @@ const COLUMN_GAP = 50;
 const CONGRATULATION_TEXT = [`Ура вы победили!`, `Список результатов:`];
 const TEXT_HEIGHT = 20;
 const COLUMN_WIDTH = 40;
-const columnHeight = BAR_HEIGHT - TEXT_HEIGHT - TEXT_HEIGHT;
+const columnHeight = BAR_HEIGHT - TEXT_HEIGHT - TEXT_HEIGHT - CLOUD_GAP - FONT_GAP;
 
 let renderCloud = function (ctx, x, y, color) {
   ctx.fillStyle = color;
@@ -29,6 +29,7 @@ let getMaxElement = function (times) {
 
 window.renderStatistics = function (ctx, names, times) {
   const max = getMaxElement(times);
+  // const max = 4881;
 
   renderCloud(
       ctx,
@@ -54,10 +55,13 @@ window.renderStatistics = function (ctx, names, times) {
   ctx.fillStyle = `#FFF`;
   ctx.textBaseline = `top`;
   ctx.fillText(times[0], BAR_X, BAR_Y);
-  ctx.rotate((90 * Math.PI) / 180);
   ctx.font = `16px PT Mono`;
   ctx.fillStyle = `red`;
-  ctx.fillRect(BAR_X, BAR_Y + TEXT_HEIGHT, COLUMN_WIDTH, (columnHeight * times[0]) / max);
+  let tempHeight = Math.round((columnHeight * times[0]) / max);
+  // let tempHeight = 83;
+  // ctx.fillRect(BAR_X, BAR_Y + 50, COLUMN_WIDTH, 105 - 50);
+  ctx.fillRect(BAR_X, BAR_Y + (BAR_HEIGHT - tempHeight), COLUMN_WIDTH, 105 - (BAR_HEIGHT - tempHeight));
+  // console.log(tempHeight, BAR_HEIGHT - Math.round((columnHeight * times[0]) / max), Math.round(times[0]), max);
 
   // names.forEach((player, index) => {
   //   ctx.fillText(player, );

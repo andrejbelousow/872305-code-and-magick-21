@@ -13,7 +13,6 @@ const STRING_GAP = 20;
 const TEXT_GAP = 15;
 const COLUMN_GAP = 50;
 const CONGRATULATION_TEXT = [`Ура вы победили!`, `Список результатов:`];
-const TEXT_HEIGHT = 20;
 const COLUMN_WIDTH = 40;
 const COLUMN_HEIGHT_CONSTANT = 105;
 let playerColor;
@@ -29,7 +28,7 @@ let getMaxElement = function (times) {
   });
 };
 
-let getRandomColor = function() {
+let getRandomColor = function () {
   return Math.random().toFixed(1) * 100;
 };
 
@@ -67,22 +66,21 @@ window.renderStatistics = function (ctx, names, times) {
     }
     ctx.fillStyle = playerColor;
     ctx.fillRect(
-      BAR_X + (COLUMN_WIDTH + COLUMN_GAP) * index,
-      BAR_Y + (BAR_HEIGHT - calculatedHeight),
-      COLUMN_WIDTH,
-      COLUMN_HEIGHT_CONSTANT - (BAR_HEIGHT - calculatedHeight)
+        BAR_X + (COLUMN_WIDTH + COLUMN_GAP) * index,
+        BAR_Y + (BAR_HEIGHT - calculatedHeight), COLUMN_WIDTH,
+        COLUMN_HEIGHT_CONSTANT - (BAR_HEIGHT - calculatedHeight)
     );
     ctx.fillStyle = `#000`;
     ctx.textBaseline = `middle`;
     ctx.fillText(
-      Math.round(timeItem),
-      BAR_X + (COLUMN_WIDTH + COLUMN_GAP) * index,
-      BAR_Y + (BAR_HEIGHT - calculatedHeight) - TEXT_GAP
+        Math.round(timeItem),
+        BAR_X + (COLUMN_WIDTH + COLUMN_GAP) * index,
+        BAR_Y + (BAR_HEIGHT - calculatedHeight) - TEXT_GAP
     );
     ctx.fillText(
-      names[index],
-      BAR_X + (COLUMN_WIDTH + COLUMN_GAP) * index,
-      BAR_Y + COLUMN_HEIGHT_CONSTANT + TEXT_GAP
+        names[index],
+        BAR_X + (COLUMN_WIDTH + COLUMN_GAP) * index,
+        BAR_Y + COLUMN_HEIGHT_CONSTANT + TEXT_GAP
     );
   });
 };

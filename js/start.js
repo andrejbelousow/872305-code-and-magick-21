@@ -16,7 +16,6 @@ const CONGRATULATION_TEXT = [`Ура вы победили!`, `Список ре
 const COLUMN_WIDTH = 40;
 const COLUMN_HEIGHT_CONSTANT = 105;
 const NAMES_COORDINATE = BAR_Y + COLUMN_HEIGHT_CONSTANT + TEXT_GAP;
-let playerColor = `rgba(255, 0, 0, 1)`;
 
 let renderCloud = function (ctx, x, y, color) {
   ctx.fillStyle = color;
@@ -33,28 +32,19 @@ let getRandomColor = function () {
   return Math.random().toFixed(1) * 100;
 };
 
-let drawColumn = function (ctx, names, times) {
-  let max = getMaxElement(times);
-  times.forEach((timeItem, index) => {
-    let calculatedHeight = (COLUMN_HEIGHT_CONSTANT * Math.round(timeItem)) / max;
-    if (names[index] !== `Вы`) {
-      playerColor = `hsl(240, ${getRandomColor().toString()}%, 50%)`;
-    }
-    ctx.fillStyle = playerColor;
-    ctx.fillRect(
-        BAR_X + (COLUMN_WIDTH + COLUMN_GAP) * index,
-        BAR_Y + (BAR_HEIGHT - calculatedHeight),
-        COLUMN_WIDTH,
-        COLUMN_HEIGHT_CONSTANT - (BAR_HEIGHT - calculatedHeight)
-    );
-    drawText(
-        ctx,
-        BAR_X + (COLUMN_WIDTH + COLUMN_GAP) * index,
-        BAR_Y + (BAR_HEIGHT - calculatedHeight),
-        names[index],
-        timeItem
-    );
-  });
+let drawColumn = function (ctx, names, index, calcHeight) {
+  let playerColor = `rgba(255, 0, 0, 1)`;
+  if (names[index] !== `Вы`) {
+    playerColor = `hsl(240, ${getRandomColor().toString()}%, 50%)`;
+  }
+  ctx.fillStyle = playerColor;
+  ctx.fillRect(
+      BAR_X + (COLUMN_WIDTH + COLUMN_GAP) * index,
+      BAR_Y + (BAR_HEIGHT - calcHeight),
+      COLUMN_WIDTH,
+      COLUMN_HEIGHT_CONSTANT - (BAR_HEIGHT - calcHeight)
+  );
+  return [BAR_X + (COLUMN_WIDTH + COLUMN_GAP) * index, BAR_Y + (BAR_HEIGHT - calcHeight)];
 };
 
 let drawText = function (ctx, xCoordinate, yCoordinate, name, timeItem) {
@@ -73,6 +63,7 @@ let drawText = function (ctx, xCoordinate, yCoordinate, name, timeItem) {
 };
 
 window.renderStatistics = function (ctx, names, times) {
+  let maxPlayerTime = getMaxElement(times);
   renderCloud(
       ctx,
       CLOUD_X + CLOUD_GAP,
@@ -94,5 +85,9 @@ window.renderStatistics = function (ctx, names, times) {
   ctx.fillStyle = `#FFF`;
   ctx.fillRect(BAR_X, BAR_Y, BAR_WIDTH, BAR_HEIGHT);
 
-  drawColumn(ctx, names, times);
+  times.forEach((timeItem, index) => {
+    let calculatedHeight = (COLUMN_HEIGHT_CONSTANT * Math.round(timeItem)) / maxPlayerTime;
+    let [xCoordinate, yCoordinate] = drawColumn(ctx, names, index, calculatedHeight);
+    drawText(ctx, xCoordinate, yCoordinate, names[index], timeItem);
+  });
 };

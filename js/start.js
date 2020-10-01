@@ -15,7 +15,8 @@ const COLUMN_GAP = 50;
 const CONGRATULATION_TEXT = [`Ура вы победили!`, `Список результатов:`];
 const COLUMN_WIDTH = 40;
 const COLUMN_HEIGHT_CONSTANT = 105;
-let playerColor;
+const NAMES_COORDINATE = BAR_Y + COLUMN_HEIGHT_CONSTANT + TEXT_GAP;
+let playerColor = `rgba(255, 0, 0, 1)`;
 
 let renderCloud = function (ctx, x, y, color) {
   ctx.fillStyle = color;
@@ -32,9 +33,46 @@ let getRandomColor = function () {
   return Math.random().toFixed(1) * 100;
 };
 
-window.renderStatistics = function (ctx, names, times) {
+let drawColumn = function (ctx, names, times) {
   let max = getMaxElement(times);
+  times.forEach((timeItem, index) => {
+    let calculatedHeight = (COLUMN_HEIGHT_CONSTANT * Math.round(timeItem)) / max;
+    if (names[index] !== `Вы`) {
+      playerColor = `hsl(240, ${getRandomColor().toString()}%, 50%)`;
+    }
+    ctx.fillStyle = playerColor;
+    ctx.fillRect(
+        BAR_X + (COLUMN_WIDTH + COLUMN_GAP) * index,
+        BAR_Y + (BAR_HEIGHT - calculatedHeight),
+        COLUMN_WIDTH,
+        COLUMN_HEIGHT_CONSTANT - (BAR_HEIGHT - calculatedHeight)
+    );
+    drawText(
+        ctx,
+        BAR_X + (COLUMN_WIDTH + COLUMN_GAP) * index,
+        BAR_Y + (BAR_HEIGHT - calculatedHeight),
+        names[index],
+        timeItem
+    );
+  });
+};
 
+let drawText = function (ctx, xCoordinate, yCoordinate, name, timeItem) {
+  ctx.fillStyle = `#000`;
+  ctx.textBaseline = `middle`;
+  ctx.fillText(
+      Math.round(timeItem),
+      xCoordinate,
+      yCoordinate - TEXT_GAP
+  );
+  ctx.fillText(
+      name,
+      xCoordinate,
+      NAMES_COORDINATE
+  );
+};
+
+window.renderStatistics = function (ctx, names, times) {
   renderCloud(
       ctx,
       CLOUD_X + CLOUD_GAP,
@@ -56,31 +94,5 @@ window.renderStatistics = function (ctx, names, times) {
   ctx.fillStyle = `#FFF`;
   ctx.fillRect(BAR_X, BAR_Y, BAR_WIDTH, BAR_HEIGHT);
 
-  times.forEach((timeItem, index) => {
-    let calculatedHeight = (COLUMN_HEIGHT_CONSTANT * Math.round(timeItem)) / max;
-
-    if (names[index] === `Вы`) {
-      playerColor = `rgba(255, 0, 0, 1)`;
-    } else {
-      playerColor = `hsl(240, ${getRandomColor().toString()}%, 50%)`;
-    }
-    ctx.fillStyle = playerColor;
-    ctx.fillRect(
-        BAR_X + (COLUMN_WIDTH + COLUMN_GAP) * index,
-        BAR_Y + (BAR_HEIGHT - calculatedHeight), COLUMN_WIDTH,
-        COLUMN_HEIGHT_CONSTANT - (BAR_HEIGHT - calculatedHeight)
-    );
-    ctx.fillStyle = `#000`;
-    ctx.textBaseline = `middle`;
-    ctx.fillText(
-        Math.round(timeItem),
-        BAR_X + (COLUMN_WIDTH + COLUMN_GAP) * index,
-        BAR_Y + (BAR_HEIGHT - calculatedHeight) - TEXT_GAP
-    );
-    ctx.fillText(
-        names[index],
-        BAR_X + (COLUMN_WIDTH + COLUMN_GAP) * index,
-        BAR_Y + COLUMN_HEIGHT_CONSTANT + TEXT_GAP
-    );
-  });
+  drawColumn(ctx, names, times);
 };
